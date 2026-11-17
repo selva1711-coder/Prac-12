@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Sphere - Student Task Management</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f0ff;
+    color: #30264a;
+    transition: 0.3s;
+}
+
+header {
+    background: #59418c;
+    color: white;
+    text-align: center;
+    padding: 28px 15px;
+    border-bottom: 5px solid #c9b4f5;
+}
+
+header h1 {
+    font-size: 36px;
+}
+
+header span {
+    color: #e0d0ff;
+}
+
+header p {
+    margin-top: 8px;
+}
+
+nav {
+    background: #d9c9f5;
+    padding: 15px;
+    text-align: center;
+}
+
+nav a {
+    color: #39265f;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 12px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    width: 90%;
+    max-width: 1050px;
+    margin: 25px auto;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    margin-bottom: 22px;
+    border-radius: 12px;
+    border-top: 5px solid #9471d4;
+    box-shadow: 0 3px 12px #00000012;
+}
+
+h2 {
+    color: #59418c;
+    margin-bottom: 12px;
+}
+
+.architecture {
+    text-align: center;
+}
+
+.architecture-box {
+    background: #eee6ff;
+    border: 1px solid #b59be8;
+    border-radius: 8px;
+    padding: 18px;
+    margin: 12px 0;
+}
+
+.arrow {
+    font-size: 25px;
+    color: #7455ad;
+}
+
+.services {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.service {
+    background: #f8f5ff;
+    padding: 15px;
+    border: 1px solid #c9b4f5;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+label {
+    display: block;
+    margin-top: 13px;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 7px;
+    border: 1px solid #c5b5e5;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    background: #7455ad;
+    color: white;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 6px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #4d367c;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    text-align: center;
+}
+
+.stat {
+    background: #eee6ff;
+    padding: 18px;
+    border-radius: 9px;
+}
+
+.stat h3 {
+    font-size: 26px;
+    color: #59418c;
+}
+
+.task {
+    background: #f8f5ff;
+    border: 1px solid #d5c7ef;
+    padding: 15px;
+    margin-top: 12px;
+    border-radius: 8px;
+}
+
+.task.completed {
+    opacity: 0.65;
+    background: #e8f5e9;
+}
+
+.task.completed h3 {
+    text-decoration: line-through;
+}
+
+.task p {
+    margin-top: 7px;
+    overflow-wrap: anywhere;
+}
+
+.task-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.delete-btn {
+    background: #c94c63;
+}
+
+.complete-btn {
+    background: #39865c;
+}
+
+#message {
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+#apiData {
+    background: #f8f5ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 12px;
+    overflow-wrap: anywhere;
+}
+
+footer {
+    background: #59418c;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+body.dark-mode {
+    background: #211b2e;
+    color: #f1eaff;
+}
+
+.dark-mode .card {
+    background: #332944;
+    color: white;
+}
+
+.dark-mode h2 {
+    color: #d7c2ff;
+}
+
+.dark-mode .task,
+.dark-mode #apiData,
+.dark-mode .service {
+    background: #403451;
+    color: white;
+    border-color: #79649c;
+}
+
+.dark-mode .stat,
+.dark-mode .architecture-box {
+    background: #403451;
+    color: white;
+}
+
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select {
+    background: #403451;
+    color: white;
+    border-color: #79649c;
+}
+
+@media(max-width:650px) {
+    .services {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    nav a {
+        display: inline-block;
+        margin: 7px;
+    }
+
+    header h1 {
+        font-size: 28px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Task <span>Sphere</span></h1>
+    <p>PLAN • ORGANIZE • ACHIEVE</p>
+</header>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#addTask">Add Task</a>
+    <a href="#taskList">My Tasks</a>
+    <a href="#resources">Resources</a>
+</nav>
+
+<div class="container" id="home">
+
+    <!-- APPLICATION ARCHITECTURE -->
+
+    <section class="card architecture" id="architecture">
+        <h2>Task Sphere - Application Architecture</h2>
+
+        <div class="architecture-box">
+            <h3>CLIENT</h3>
+            <p>Mobile Device | Desktop Device</p>
+        </div>
+
+        <div class="arrow">⬇</div>
+
+        <div class="architecture-box">
+            <h3>USER INTERFACE</h3>
+            <p>HTML and CSS</p>
+        </div>
+
+        <div class="arrow">⬇</div>
+
+        <div class="architecture-box">
+            <h3>JAVASCRIPT APPLICATION</h3>
+
+            <div class="services">
+                <div class="service">Task Management</div>
+                <div class="service">Task Validation</div>
+                <div class="service">Task Completion</div>
+                <div class="service">Task Filtering</div>
+            </div>
+        </div>
+
+        <div class="arrow">⬇</div>
+
+        <div class="architecture-box">
+            <h3>DATA MANAGEMENT</h3>
+            <p>Browser Local Storage</p>
+            <p>Fetch API - Sample External Data</p>
+        </div>
+    </section>
+
+    <!-- TASK STATISTICS -->
+
+    <section class="card">
+        <h2>My Dashboard</h2>
+
+        <div class="stats">
+            <div class="stat">
+                <h3 id="totalCount">0</h3>
+                <p>Total Tasks</p>
+            </div>
+
+            <div class="stat">
+                <h3 id="pendingCount">0</h3>
+                <p>Pending Tasks</p>
+            </div>
+
+            <div class="stat">
+                <h3 id="completedCount">0</h3>
+                <p>Completed Tasks</p>
+            </div>
+        </div>
+
+        <button onclick="toggleTheme()" id="themeButton">
+            Enable Dark Mode
+        </button>
+    </section>
+
+    <!-- ADD TASK FORM -->
+
+    <section class="card" id="addTask">
+        <h2>Add Your Task</h2>
+        <p>Enter your task details below.</p>
+
+        <form id="taskForm">
+
+            <label for="taskName">Task Title</label>
+            <input type="text" id="taskName"
+                   placeholder="Enter task title" required>
+
+            <label for="description">Description</label>
+            <textarea id="description"
+                      placeholder="Enter task description"
+                      required></textarea>
+
+            <label for="dueDate">Due Date</label>
+            <input type="date" id="dueDate" required>
+
+            <label for="priority">Priority</label>
+            <select id="priority" required>
+                <option value="">Select Priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+
+            <button type="submit">Add Task</button>
+        </form>
+
+        <p id="message"></p>
+    </section>
+
+    <!-- TASK LIST -->
+
+    <section class="card" id="taskList">
+        <h2>My Tasks</h2>
+
+        <input type="text" id="searchTask"
+               placeholder="Search your tasks...">
+
+        <label for="filterTask">Filter Tasks</label>
+        <select id="filterTask">
+            <option value="All">All Tasks</option>
+            <option value="Pending">Pending Tasks</option>
+            <option value="Completed">Completed Tasks</option>
+        </select>
+
+        <div id="taskContainer"></div>
+    </section>
+
+    <!-- FETCH API -->
+
+    <section class="card" id="resources">
+        <h2>Study Resources</h2>
+        <p>Click the button to retrieve sample information using Fetch API.</p>
+
+        <button onclick="getStudyData()">
+            Fetch Study Resources
+        </button>
+
+        <div id="apiData">
+            Study information will appear here.
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    <p>© 2026 Task Sphere | Student Task Management System</p>
+    <p>Organize Your Tasks and Achieve Your Goals!</p>
+</footer>
+
+<script>
+
+// LOAD SAVED TASKS
+
+let tasks = JSON.parse(localStorage.getItem("taskSphereTasks")) || [];
+
+function saveTasks() {
+    localStorage.setItem("taskSphereTasks", JSON.stringify(tasks));
+}
+
+// ADD TASK
+
+document.getElementById("taskForm")
+.onsubmit = function(event) {
+
+    event.preventDefault();
+
+    let name = document.getElementById("taskName").value.trim();
+    let description = document.getElementById("description").value.trim();
+    let dueDate = document.getElementById("dueDate").value;
+    let priority = document.getElementById("priority").value;
+
+    if (!name || !description || !dueDate || !priority) {
+        document.getElementById("message").innerText =
+            "Please fill all the fields.";
+        return;
+    }
+
+    let task = {
+        id: Date.now(),
+        name: name,
+        description: description,
+        dueDate: dueDate,
+        priority: priority,
+        completed: false
+    };
+
+    tasks.push(task);
+
+    saveTasks();
+    displayTasks();
+
+    document.getElementById("taskForm").reset();
+
+    document.getElementById("message").innerText =
+        "Task added successfully!";
+};
+
+// DISPLAY TASKS
+
+function displayTasks() {
+
+    let container = document.getElementById("taskContainer");
+
+    container.innerHTML = "";
+
+    let search = document.getElementById("searchTask")
+        .value.toLowerCase();
+
+    let filter = document.getElementById("filterTask").value;
+
+    let filteredTasks = tasks.filter(function(task) {
+
+        let matchesSearch =
+            task.name.toLowerCase().includes(search);
+
+        let matchesFilter =
+            filter === "All" ||
+            (filter === "Pending" && !task.completed) ||
+            (filter === "Completed" && task.completed);
+
+        return matchesSearch && matchesFilter;
+    });
+
+    if (filteredTasks.length === 0) {
+        container.innerHTML = "<p>No tasks found.</p>";
+    }
+
+    filteredTasks.forEach(function(task) {
+
+        let taskDiv = document.createElement("div");
+
+        taskDiv.className = "task";
+
+        if (task.completed) {
+            taskDiv.classList.add("completed");
+        }
+
+        let heading = document.createElement("h3");
+        heading.textContent = task.name;
+
+        let details = document.createElement("p");
+        details.textContent = "Description: " + task.description;
+
+        let date = document.createElement("p");
+        date.textContent = "Due Date: " + task.dueDate;
+
+        let priority = document.createElement("p");
+        priority.textContent = "Priority: " + task.priority;
+
+        let status = document.createElement("p");
+        status.textContent = task.completed ?
+            "Status: Completed" : "Status: Pending";
+
+        let buttons = document.createElement("div");
+        buttons.className = "task-buttons";
+
+        let completeButton = document.createElement("button");
+        completeButton.className = "complete-btn";
+        completeButton.textContent = task.completed ?
+            "Mark Pending" : "Complete";
+
+        completeButton.onclick = function() {
+            toggleComplete(task.id);
+        };
+
+        let deleteButton = document.createElement("button");
+        deleteButton.className = "delete-btn";
+        deleteButton.textContent = "Delete";
+
+        deleteButton.onclick = function() {
+            deleteTask(task.id);
+        };
+
+        buttons.appendChild(completeButton);
+        buttons.appendChild(deleteButton);
+
+        taskDiv.appendChild(heading);
+        taskDiv.appendChild(details);
+        taskDiv.appendChild(date);
+        taskDiv.appendChild(priority);
+        taskDiv.appendChild(status);
+        taskDiv.appendChild(buttons);
+
+        container.appendChild(taskDiv);
+    });
+
+    updateCounts();
+}
+
+// COMPLETE TASK
+
+function toggleComplete(id) {
+
+    let task = tasks.find(function(item) {
+        return item.id === id;
+    });
+
+    if (task) {
+        task.completed = !task.completed;
+    }
+
+    saveTasks();
+    displayTasks();
+}
+
+// DELETE TASK
+
+function deleteTask(id) {
+
+    tasks = tasks.filter(function(task) {
+        return task.id !== id;
+    });
+
+    saveTasks();
+    displayTasks();
+}
+
+// UPDATE DASHBOARD COUNTS
+
+function updateCounts() {
+
+    let total = tasks.length;
+
+    let completed = tasks.filter(function(task) {
+        return task.completed;
+    }).length;
+
+    let pending = total - completed;
+
+    document.getElementById("totalCount").innerText = total;
+    document.getElementById("completedCount").innerText = completed;
+    document.getElementById("pendingCount").innerText = pending;
+}
+
+// SEARCH AND FILTER
+
+document.getElementById("searchTask").oninput = displayTasks;
+
+document.getElementById("filterTask").onchange = displayTasks;
+
+// DARK MODE
+
+function toggleTheme() {
+
+    document.body.classList.toggle("dark-mode");
+
+    let isDark = document.body.classList.contains("dark-mode");
+
+    localStorage.setItem("taskSphereTheme", isDark ? "dark" : "light");
+
+    updateThemeButton();
+}
+
+function updateThemeButton() {
+
+    let isDark = document.body.classList.contains("dark-mode");
+
+    document.getElementById("themeButton").innerText =
+        isDark ? "Enable Light Mode" : "Enable Dark Mode";
+}
+
+function loadTheme() {
+
+    let savedTheme = localStorage.getItem("taskSphereTheme");
+
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+    }
+
+    updateThemeButton();
+}
+
+// FETCH API - GET REQUEST
+
+async function getStudyData() {
+
+    let output = document.getElementById("apiData");
+
+    output.innerText = "Loading study resources...";
+
+    try {
+
+        let response = await fetch(
+            "https://jsonplaceholder.typicode.com/posts/1"
+        );
+
+        if (!response.ok) {
+            throw new Error("API request failed");
+        }
+
+        let data = await response.json();
+
+        output.innerHTML =
+            "<h3>Sample Study Resource</h3>" +
+            "<p><b>Resource ID:</b> " + data.id + "</p>" +
+            "<p><b>Title:</b> " + data.title + "</p>" +
+            "<p><b>Details:</b> " + data.body + "</p>";
+
+    }
+
+    catch(error) {
+
+        output.innerText =
+            "Unable to retrieve data. Check your internet connection.";
+
+    }
+}
+
+// INITIALIZE APPLICATION
+
+loadTheme();
+displayTasks();
+
+console.log("Task Sphere Application Loaded Successfully.");
+
+</script>
+
+</body>
+</html>
